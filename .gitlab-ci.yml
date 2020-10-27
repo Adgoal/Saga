@@ -1,0 +1,85 @@
+saga_base_image:
+  tags:
+    - dev
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+    DOCKER_DIR: packages/Saga/.docker/app_test
+  stage: base_image
+  only:
+    changes:
+      - packages/Saga/**/*
+  script:
+    - docker_build_file $IMAGE $DOCKER_DIR/Dockerfile
+    - docker push $IMAGE
+
+# app_test begin
+saga_style-phpstan:
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+  only:
+    changes:
+      - packages/Saga/**/*
+  extends: .dev_app_test
+  script:
+    - docker run --rm -t $IMAGE vendor/bin/phpstan analyse -l 6 -c phpstan.neon src tests
+
+saga_style-psalm:
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+  only:
+    changes:
+      - packages/Saga/**/*
+  extends: .dev_app_test
+  script:
+    - docker run --rm -t $IMAGE vendor/bin/psalm --config=psalm.xml
+
+saga_lint-paralell:
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+  only:
+    changes:
+      - packages/Saga/**/*
+  extends: .dev_app_test
+  script:
+    - docker run --rm -t $IMAGE vendor/bin/parallel-lint ./ --exclude vendor --exclude bin/.phpunit
+
+saga_coding-standards-ecs:
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+  only:
+    changes:
+      - packages/Saga/**/*
+  extends: .dev_app_test
+  script:
+    - docker run --rm -t $IMAGE vendor/bin/ecs check src tests
+
+saga_coding-standards-phpmd:
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+  only:
+    changes:
+      - packages/Saga/**/*
+  extends: .dev_app_test
+  script:
+    - docker run --rm -t $IMAGE vendor/bin/phpmd src/ text phpmd.xml
+
+saga_phpunit:
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+  only:
+    changes:
+      - packages/Saga/**/*
+  extends: .dev_app_test
+  script:
+    - docker run --rm -t $IMAGE vendor/bin/phpunit --testsuite unit-tests
+
+saga_composer-validate:
+  variables:
+    IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/component-saga/app_test:$CI_COMMIT_REF_SLUG
+  only:
+    changes:
+      - packages/Saga/**/*
+  extends: .dev_app_test
+  script:
+    - docker run --rm -t $IMAGE composer validate --no-check-publish
+# app_test end
