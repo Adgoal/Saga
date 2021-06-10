@@ -11,6 +11,9 @@ use Mockery;
 /**
  * Command bus that is able to record all dispatched commands.
  *
+ * @psalm-suppress MethodSignatureMismatch
+ * @psalm-suppress InvalidExtendClass
+ *
  * @category Tests\Unit
  */
 final class TraceableCommandBus extends CommandBus
@@ -34,6 +37,7 @@ final class TraceableCommandBus extends CommandBus
      *
      * @psalm-suppress PossiblyUndefinedMethod
      * @psalm-suppress InvalidArgument
+     * @psalm-suppress UndefinedMagicMethod
      */
     public function __construct()
     {
