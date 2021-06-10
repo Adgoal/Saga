@@ -8,7 +8,6 @@ use Broadway\Saga\State;
 use Broadway\Saga\State\Criteria;
 use Broadway\Saga\State\RepositoryException;
 use Broadway\Saga\State\RepositoryInterface;
-use function count;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
@@ -16,8 +15,9 @@ use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Exception;
-use function gettype;
 use PDO;
+use function count;
+use function gettype;
 
 /**
  * Class DBALSagaRepository.
@@ -98,8 +98,6 @@ class DBALSagaRepository implements RepositoryInterface
 
             default:
                 throw new DBALException('Unsupported database type: '.get_class($connectionDrive));
-
-                break;
         }
     }
 
@@ -109,7 +107,7 @@ class DBALSagaRepository implements RepositoryInterface
      * @param Criteria $criteria
      * @param mixed    $sagaId
      *
-     * @return null|State
+     * @return State|null
      */
     public function findOneBy(Criteria $criteria, $sagaId): ?State
     {
