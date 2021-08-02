@@ -8,7 +8,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "adgoal-common/base": "^4.0",
-        "adgoal/broadway-saga": "^0.9",
+        "adgoal/broadway-saga": "^0.9 || ^0.13.0",
         "broadway/broadway": "^2.1",
         "doctrine/dbal": "^2.9",
         "league/tactician": "^1.0"
